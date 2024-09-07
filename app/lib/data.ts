@@ -108,7 +108,7 @@ export async function fetchCardData() {
 
 const ITEMS_PER_PAGE = 6;
 export async function fetchFilteredInvoices(
-  query: string,
+  queryString: string,
   currentPage: number,
 ): Promise<InvoicesTable[]> {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -133,7 +133,7 @@ export async function fetchFilteredInvoices(
         invoices.status ILIKE $1
       ORDER BY invoices.date DESC
       LIMIT $2 OFFSET $3
-    `, [`%${query}%`, ITEMS_PER_PAGE, offset]);
+    `, [`%${queryString}%`, ITEMS_PER_PAGE, offset]);
 
     return invoices.rows;
   } catch (error) {
@@ -142,7 +142,7 @@ export async function fetchFilteredInvoices(
   }
 }
 
-export async function fetchInvoicesPages(query: string): Promise<number> {
+export async function fetchInvoicesPages(queryString: string): Promise<number> {
   try {
     const result = await query<{ count: string }>(`
       SELECT COUNT(*)
@@ -154,7 +154,7 @@ export async function fetchInvoicesPages(query: string): Promise<number> {
         invoices.amount::text ILIKE $1 OR
         invoices.date::text ILIKE $1 OR
         invoices.status ILIKE $1
-    `, [`%${query}%`]);
+    `, [`%${queryString}%`]);
 
     const totalPages = Math.ceil(Number(result.rows[0].count) / ITEMS_PER_PAGE);
     return totalPages;

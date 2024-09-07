@@ -5,13 +5,13 @@ import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
 import { fetchFilteredInvoices } from '@/app/lib/data';
 
 export default async function InvoicesTable({
-  query,
+  querySting,
   currentPage,
 }: {
-  query: string;
+  querySting: string;
   currentPage: number;
 }) {
-  const invoices = await fetchFilteredInvoices(query, currentPage);
+  const invoices = await fetchFilteredInvoices(querySting, currentPage);
 
   return (
     <div className="mt-6 flow-root">
