@@ -43,6 +43,10 @@ export async function fetchRevenue(): Promise<Revenue[]> {
 
 export async function fetchLatestInvoices(): Promise<LatestInvoice[]> {
   try {
+
+    console.log('Fetching invoice data...');
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
     const data = await query<LatestInvoiceRaw>(`
       SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
       FROM invoices
@@ -50,6 +54,8 @@ export async function fetchLatestInvoices(): Promise<LatestInvoice[]> {
       ORDER BY invoices.date DESC
       LIMIT 5
     `);
+
+    console.log('Data fetch completed after 1.5 seconds.');
 
     const latestInvoices = data.rows.map((invoice) => ({
       ...invoice,
@@ -64,6 +70,9 @@ export async function fetchLatestInvoices(): Promise<LatestInvoice[]> {
 
 export async function fetchCardData() {
   try {
+    console.log('Fetching card data...');
+    await new Promise((resolve) => setTimeout(resolve, 750));
+
     const invoiceCountPromise = query('SELECT COUNT(*) FROM invoices');
     const customerCountPromise = query('SELECT COUNT(*) FROM customers');
     const invoiceStatusPromise = query(`
@@ -84,6 +93,7 @@ export async function fetchCardData() {
     const totalPaidInvoices = formatCurrency(invoiceStatusResult.rows[0].paid ?? '0');
     const totalPendingInvoices = formatCurrency(invoiceStatusResult.rows[0].pending ?? '0');
 
+    console.log('Data fetch completed after .75 seconds.');
     return {
       numberOfCustomers,
       numberOfInvoices,
