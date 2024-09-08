@@ -1,4 +1,4 @@
-import { Pool, QueryResult } from 'pg';
+import { query } from '@/app/lib/db';
 import {
   CustomerField,
   CustomersTableType,
@@ -8,20 +8,6 @@ import {
   Revenue,
 } from './definitions';
 import { formatCurrency } from './utils';
-
-// Create a new pool
-const pool = new Pool({
-  connectionString: process.env.POSTGRES_URL,
-});
-
-async function query<T>(text: string, params?: any[]): Promise<QueryResult<T>> {
-  const client = await pool.connect();
-  try {
-    return await client.query<T>(text, params);
-  } finally {
-    client.release();
-  }
-}
 
 export async function fetchRevenue(): Promise<Revenue[]> {
   try {
